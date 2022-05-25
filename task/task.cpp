@@ -13,6 +13,7 @@
 /*
 вместо лонг лонг взять unsigned long long в long long size = DirectorySize(pathname);
 
+1,51,17 начало
 2.25 копирование в бинарном режиме из одного места в другое
 2,29,14 удаление папки
 2,40 библиотечная ф-я удаления папки
@@ -54,14 +55,14 @@ int main()
 	{
 		system("cls");
 		Menu(menu, 3);
-		int choice{ 0 };
+		/*int choice{ 0 };
 		cout << "\n   >>> ";
 		cin >> choice;
-		cin.get();
-		switch (choice)
+		cin.get();*/
+		switch (1)
 		{
 		case 1:
-			cout << "Введите путь к папке, которую требуется скопировать: " << endl;
+			cout << "Откуда: " << endl;
 			cin.getline(oldPath, MAX_PATH);
 			/*
 			Функция _access(char*, int) проверяет характеристики файла или папки.
@@ -75,7 +76,11 @@ int main()
 				cout << "Path not found\n";
 				exit(0);
 			}
-			cout << "Введите новый путь для папки: " << endl;
+			else
+			{
+
+			}
+			cout << "Куда: " << endl;
 			cin.getline(newPath, MAX_PATH);
 			if (_access(oldPath, 0) == -1)
 			{
@@ -83,6 +88,7 @@ int main()
 				exit(0);
 			}
 			CopyFolder(oldPath, newPath);
+			cout << "\nКопирование завершено !" << endl;
 			break;
 		case 2:
 
