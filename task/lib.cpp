@@ -15,7 +15,8 @@ void Menu(char ptr[][16], int row)
 	}
 }
 
-int directory{ 0 }; // для создания корневой папки
+bool rootDirFolder = true; // для создания корневого каталога
+
 // Копировать папку
 void CopyFolder(char* oldPath, char* newPath)
 {
@@ -25,6 +26,25 @@ void CopyFolder(char* oldPath, char* newPath)
 	_finddata_t* f = new _finddata_t;
 	int handle = _findfirst(find, f);
 	int result = handle;
+
+	if (rootDirFolder) // для создания корневого каталога(один раз)
+	{
+		char* RootDirName = new char[MAX_PATH];
+		char* pch = strrchr(oldPath, '\\'); // последнее вхождение "\" в строке старого адреса
+
+		strcpy_s(RootDirName, MAX_PATH, newPath);
+		strcat_s(RootDirName, MAX_PATH, pch); // получен новый путь к корневой папке
+		if (_mkdir(RootDirName) == -1) // создание вложенной папки, если возвращает 0
+		{
+			perror("Error");
+			system("pause");
+			system("cls");
+			exit(0);
+		}
+		strcat_s(newPath, MAX_PATH, pch);
+		rootDirFolder = false;
+		delete[]RootDirName;
+	}
 
 	while (result != -1)
 	{
@@ -45,12 +65,13 @@ void CopyFolder(char* oldPath, char* newPath)
 				system("cls");
 				exit(0);
 			}
-			strcat_s(oldPath, MAX_PATH, "\\");
+			// продолжить сравнивать 2 запущенных программы, мою и преподавателя, пошагово (есть проблема с передачей адреса в внутренний вызов функциия копифолдер)
+			/*strcat_s(oldPath, MAX_PATH, "\\");
 			strcat_s(oldPath, MAX_PATH, f->name);
 			strcat_s(newPath, MAX_PATH, "\\");
-			strcat_s(newPath, MAX_PATH, f->name);
+			strcat_s(newPath, MAX_PATH, f->name);*/
 
-			CopyFolder(oldPath, newPath);
+			CopyFolder(find, newPath);
 		}
 		else
 		{
@@ -83,6 +104,9 @@ void CopyFolder(char* oldPath, char* newPath)
 		}
 		result = _findnext(handle, f);
 	}
+	_findclose(handle);
+	delete[] find;
+	delete f;
 }
 
 // Переместить папку
